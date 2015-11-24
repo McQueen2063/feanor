@@ -1,0 +1,15 @@
+on host itself:
+
+pkg install iocage nginx bash zsh
+
+
+# shell commands
+# one time: iocage fetch
+# one time: iocage lo1 create
+
+# create a jail
+JAILNAME=nameofjail
+iocage create hostname=$JAILNAME tag=$JAILNAME ip4_addr="lo1|10.42.0.1"
+iocage set allow_raw_sockets=1 $JAILNAME
+iocage start $JAILNAME
+iocage console $JAILNAME
