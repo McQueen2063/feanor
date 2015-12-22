@@ -7,9 +7,22 @@ pkg install iocage nginx bash zsh
 # one time: iocage fetch
 # one time: iocage lo1 create
 
+# set defaults
+iocage set allow_mount_zfs=1 default
+iocage set allow_raw_sockets=1 default
+iocage set allow_set_hostname=1 default
+
 # create a jail
 JAILNAME=nameofjail
-iocage create hostname=$JAILNAME tag=$JAILNAME ip4_addr="lo1|10.42.0.1"
-iocage set allow_raw_sockets=1 $JAILNAME
+iocage create hostname=$JAILNAME tag=$JAILNAME ip4_addr="lo1|10.42.0.201" resolver="domain kernel32.de;nameserver 10.42.0.254"
 iocage start $JAILNAME
 iocage console $JAILNAME
+# customize jail and make it a template
+iocage set template=yes $JAILNAME
+
+# clone new jails from this template
+export IP=10.42.0.1; export JAILNAME=www1; iocage clone template1 tag=$JAILNAME ip4_addr="lo1|$IP" resolver="domain kernel32.de;nameserver 10.42.0.254" host_hostname=$JAILNAME
+
+
+# misc notes
+openssl req -nodes -new -x509 -sha256 -newkey rsa:2048 -keyout pkg.kernel32.de.key -out pkg.kernel32.de.crt -days 3650
