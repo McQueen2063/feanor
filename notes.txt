@@ -10,18 +10,23 @@ pkg install iocage nginx bash zsh
 # set defaults
 iocage set allow_mount_zfs=1 default
 iocage set allow_raw_sockets=1 default
-iocage set allow_set_hostname=1 default
+iocage set allow_set_hostname=0 default
+iocage set boot=on default
 
 # create a jail
-JAILNAME=basejail
+JAILNAME=basetemplate
 iocage create hostname=$JAILNAME tag=$JAILNAME ip4_addr="lo1|10.42.0.201" resolver="domain kernel32.de;nameserver 10.42.0.254"
 iocage start $JAILNAME
 iocage console $JAILNAME
 # customize jail and make it a template
+# like pkg install py27-salt and so on
+# then make it the template for every future jail
 iocage set template=yes $JAILNAME
 
 # clone new jails from this template
-export IP=10.42.0.1; export JAILNAME=www1; iocage clone basetemplate tag=$JAILNAME ip4_addr="lo1|$IP" resolver="domain kernel32.de;nameserver 10.42.0.254" host_hostname=$JAILNAME
+export IP=10.42.0.1; export JAILNAME=www1; iocage clone basetemplate tag=$JAILNAME ip4_addr="lo1|$IP" resolver="domain kernel32.de;nameserver 10.42.0.254"
+sudo iocage set hostname=$JAILNAME
+sudo iocage start $JAILNAME
 
 
 # misc notes
