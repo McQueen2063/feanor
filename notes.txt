@@ -25,8 +25,8 @@ iocage set template=yes $JAILNAME
 
 # clone new jails from this template
 export IP=10.42.0.1; export JAILNAME=www1; iocage clone basetemplate tag=$JAILNAME ip4_addr="lo1|$IP" resolver="domain kernel32.de;nameserver 10.42.0.254"
-sudo iocage set hostname=$JAILNAME
-sudo iocage start $JAILNAME
+sudo iocage set hostname=$JAILNAME $JAILNAME
+sudo iocage start $JAILNAME $JAILNAME
 
 
 # misc notes
